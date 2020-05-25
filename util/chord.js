@@ -64,51 +64,32 @@ class PlayedChord extends Chord {
   constructor(notes) {
     super();
 
-    if (notes.length !== numberOfStrings) {
-      throw new Error(`A chord must specify ${numberOfStrings} notes`);
-    }
-
-    // guitar tends to index strings from high to low, which doesn't make sense
-    // to me, hence this reverse mapping
-    this.notes = {
-      [guitarStrings.sixth]: notes[0],
-      [guitarStrings.fifth]: notes[1],
-      [guitarStrings.fourth]: notes[2],
-      [guitarStrings.third]: notes[3],
-      [guitarStrings.second]: notes[4],
-      [guitarStrings.first]: notes[5],
-    };
+    this.notes = notes;
   }
 
   getNoteAt(guitarString) {
-    if (!(guitarString in this.notes)) {
-      throw new Error(`Unexpected guitar string: "${guitarString}"`);
+    const note = this.notes.find(note => note.getGuitarString() === guitarString);
+    if (note) {
+      return note;
     }
 
-    return this.notes[guitarString];
+    return Note.makeNull();
   }
 
   toString() {
     return [
-      this.notes[guitarStrings.sixth].toFretString(),
-      this.notes[guitarStrings.fifth].toFretString(),
-      this.notes[guitarStrings.fourth].toFretString(),
-      this.notes[guitarStrings.third].toFretString(),
-      this.notes[guitarStrings.second].toFretString(),
-      this.notes[guitarStrings.first].toFretString(),
+      this.getNoteAt(guitarStrings.sixth).toFretString(),
+      this.getNoteAt(guitarStrings.fifth).toFretString(),
+      this.getNoteAt(guitarStrings.fourth).toFretString(),
+      this.getNoteAt(guitarStrings.third).toFretString(),
+      this.getNoteAt(guitarStrings.second).toFretString(),
+      this.getNoteAt(guitarStrings.first).toFretString(),
     ].join();
   }
 
   toJson() {
     return {
-      notes: [
-        this.notes[guitarStrings.sixth].toJson(),
-        this.notes[guitarStrings.fifth].toJson(),
-        this.notes[guitarStrings.fourth].toJson(),
-        this.notes[guitarStrings.third].toJson(),
-        this.notes[guitarStrings.second].toJson(),
-        this.notes[guitarStrings.first].toJson(),
-      ]
+      notes: this.notes.map(note => note.toJson())
     };
   }
 }

@@ -12,10 +12,6 @@ function main() {
   tab.addChord(Chord.fromString('____32'));
   tab.addChord(Chord.fromJson({
     notes: [
-      { fret: null, finger: null, guitarString: null, accent: null, },
-      { fret: null, finger: null, guitarString: null, accent: null, },
-      { fret: null, finger: null, guitarString: null, accent: null, },
-      { fret: null, finger: null, guitarString: null, accent: null, },
       {
         fret: '3',
         finger: enums.fingers.unspecified,
@@ -31,19 +27,12 @@ function main() {
     ]
   }));
   tab.addChord(Chord.fromJson({
-    notes: [
-      { fret: null, finger: null, guitarString: null, accent: null, },
-      { fret: null, finger: null, guitarString: null, accent: null, },
-      { fret: null, finger: null, guitarString: null, accent: null, },
-      { fret: null, finger: null, guitarString: null, accent: null, },
-      { fret: null, finger: null, guitarString: null, accent: null, },
-      {
-        fret: '3',
-        finger: enums.fingers.unspecified,
-        guitarString: enums.guitarStrings.first,
-        accent: enums.accents.hammer,
-      },
-    ]
+    notes: [{
+      fret: '3',
+      finger: enums.fingers.unspecified,
+      guitarString: enums.guitarStrings.first,
+      accent: enums.accents.hammer,
+    }]
   }));
   tab.addChord(Chord.fromString('_____2'));
 

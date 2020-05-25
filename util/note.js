@@ -5,6 +5,10 @@ export class Note extends Serializable {
   static nullFret = '';
   static nullNoteRepresentation = '_';
 
+  getGuitarString() {
+    throw new Error('unimplemented');
+  }
+
   getAccent() {
     throw new Error('unimplemented');
   }
@@ -51,8 +55,12 @@ export class Note extends Serializable {
 }
 
 class NullNote extends Note {
+  getGuitarString() {
+    return null;
+  }
+
   getAccent() {
-    return accents.none;
+    return null;
   }
 
   toFretString() {
@@ -94,6 +102,10 @@ class PlayedNote extends Note {
     this.finger = finger;
     this.guitarString = guitarString;
     this.accent = accent;
+  }
+
+  getGuitarString() {
+    return this.guitarString;
   }
 
   getAccent() {

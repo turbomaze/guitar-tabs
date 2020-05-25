@@ -125,6 +125,7 @@ class PlayedNote extends Note {
       fret: this.fret,
       finger: this.finger,
       guitarString: this.guitarString,
+      accent: this.accent,
     };
   }
 

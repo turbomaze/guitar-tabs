@@ -1,9 +1,13 @@
 import { Serializable } from './helpers';
-import { fingers, guitarStrings } from './enums';
+import { accents, fingers, guitarStrings } from './enums';
 
 export class Note extends Serializable {
   static nullFret = '';
   static nullNoteRepresentation = '_';
+
+  getAccent() {
+    throw new Error('unimplemented');
+  }
 
   toFretString() {
     throw new Error('unimplemented');
@@ -18,7 +22,7 @@ export class Note extends Serializable {
       return Note.makeNull();
     }
 
-    return new PlayedNote(parseInt(fretString), fingers.unspecified, guitarString);
+    return new PlayedNote(fretString, fingers.unspecified, guitarString, accents.none);
   }
 
   static fromString(string) {
@@ -27,7 +31,7 @@ export class Note extends Serializable {
     }
 
     const parts = string.split(':');
-    return new PlayedNote(parseInt(parts[0]), parts[1], parts[2]);
+    return new PlayedNote(parts[0], parts[1], parts[2], parts[3]);
   }
 
   static fromJson(json) {
@@ -35,7 +39,8 @@ export class Note extends Serializable {
       [
         json.fret,
         json.finger,
-        json.guitarString
+        json.guitarString,
+        json.accent,
       ].every(a => a === null)
     ) {
       return Note.makeNull();
@@ -46,6 +51,10 @@ export class Note extends Serializable {
 }
 
 class NullNote extends Note {
+  getAccent() {
+    return accents.none;
+  }
+
   toFretString() {
     return Note.nullFret;
   }
@@ -55,7 +64,7 @@ class NullNote extends Note {
   }
 
   toJson() {
-    return { fret: null, finger: null, guitarString: null };
+    return { fret: null, finger: null, guitarString: null, accent: null };
   }
 }
 
@@ -64,8 +73,9 @@ class PlayedNote extends Note {
    * @param {number} fret
    * @param {Finger} finger
    * @param {GuitarString} guitarString
+   * @param {Accent} accent
    */
-  constructor(fret, finger, guitarString) {
+  constructor(fret, finger, guitarString, accent) {
     super();
 
     if (!Object.values(fingers).includes(finger)) {
@@ -76,9 +86,18 @@ class PlayedNote extends Note {
       throw new Error(`Unexpected finger: "${finger}"`);
     }
 
+    if (!Object.values(accents).includes(accent)) {
+      throw new Error(`Unexpected accent: "${accent}"`);
+    }
+
     this.fret = fret;
     this.finger = finger;
     this.guitarString = guitarString;
+    this.accent = accent;
+  }
+
+  getAccent() {
+    return this.accent;
   }
 
   toFretString() {
@@ -86,7 +105,7 @@ class PlayedNote extends Note {
   }
 
   toString() {
-    return `${this.fret}:${this.finger}:${this.guitarString}`;
+    return `${this.fret}:${this.finger}:${this.guitarString}:${this.accent}`;
   }
 
   toJson() {
@@ -98,6 +117,6 @@ class PlayedNote extends Note {
   }
 
   static fromJson(json) {
-    return new PlayedNote(parseInt(json.fret), json.finger, json.guitarString);
+    return new PlayedNote(json.fret, json.finger, json.guitarString, json.accent);
   }
 }

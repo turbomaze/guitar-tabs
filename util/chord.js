@@ -9,9 +9,13 @@ export class Chord extends Serializable {
     throw new Error('unimplemented');
   }
 
+  static rest() {
+    return new NullChord();
+  }
+
   static fromString(string) {
     if (string === Chord.nullChordRepresentation) {
-      return new NullChord();
+      return Chord.rest();
     }
 
     const frets = string.split('').map(fretDisplayString => {
@@ -31,7 +35,7 @@ export class Chord extends Serializable {
 
   static fromJson(json) {
     if (json.notes === null) {
-      return new NullChord;
+      return Chord.rest();
     }
 
     const notes = json.notes.map(jsonNote => Note.fromJson(jsonNote));

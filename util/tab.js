@@ -28,8 +28,8 @@ export class Tab extends Serializable {
       bars[bars.length - 1].push(this.ticks[i]);
     }
 
-    if (bars[bars.length - 1].length !== this.ticksPerBar) {
-      throw new Error('Bad number of ticks in the final bar');
+    for (let i = bars[bars.length - 1].length; i < this.ticksPerBar; i++) {
+      bars[bars.length - 1].push(Chord.rest());
     }
 
     return bars;

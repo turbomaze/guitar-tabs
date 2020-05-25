@@ -19,6 +19,7 @@ export default function Index() {
       <style jsx global>{`
         * {
           box-sizing: border-box;
+          font-family: monospace;
         }
       `}</style>
     </Container>
@@ -67,12 +68,12 @@ const BarUi = ({ bar }) => {
 const Tick = ({ tick }) => {
   return (
     <div>
-      <GuitarString note={tick.getNoteAt(enums.guitarStrings.first)} />
-      <GuitarString note={tick.getNoteAt(enums.guitarStrings.second)} />
-      <GuitarString note={tick.getNoteAt(enums.guitarStrings.third)} />
-      <GuitarString note={tick.getNoteAt(enums.guitarStrings.fourth)} />
-      <GuitarString note={tick.getNoteAt(enums.guitarStrings.fifth)} />
-      <GuitarString note={tick.getNoteAt(enums.guitarStrings.sixth)} />
+      <GuitarString tick={tick} guitarString={enums.guitarStrings.first} />
+      <GuitarString tick={tick} guitarString={enums.guitarStrings.second} />
+      <GuitarString tick={tick} guitarString={enums.guitarStrings.third} />
+      <GuitarString tick={tick} guitarString={enums.guitarStrings.fourth} />
+      <GuitarString tick={tick} guitarString={enums.guitarStrings.fifth} />
+      <GuitarString tick={tick} guitarString={enums.guitarStrings.sixth} />
 
       <style jsx>{`
         div {
@@ -90,12 +91,16 @@ const Tick = ({ tick }) => {
   );
 };
 
-const GuitarString = ({ note }) => {
+const GuitarString = ({ tick, guitarString }) => {
   const percentPerString = (100 / enums.numberOfStrings).toFixed(2);
+  const note = tick.getNoteAt(guitarString);
+  const label = note.toFretString();
+
   return (
     <div className="guitar-string-container">
       <div className="guitar-string-line"></div>
-      <NoteUi label={note.toFretString()} />
+      <NoteUi label={label} />
+      { note.getAccent() === enums.accents.hammer ? <Accent /> : null }
 
       <style jsx>{`
         .guitar-string-container {
@@ -126,6 +131,7 @@ const NoteUi = ({ label }) => {
       {label}
       <style jsx>{`
         div {
+          font-size: 24px;
           position: absolute;
           top: 50%;
           left: 50%;
@@ -138,3 +144,25 @@ const NoteUi = ({ label }) => {
     </div>
   );
 };
+
+const Accent = ({ over, under }) => {
+  return (
+    <div>
+      <style jsx>{`
+        div {
+          position: absolute;
+          border-top: 1px solid black;
+          width: 100%;
+          height: 66%;
+          border-radius: 50%;
+          top: 10%;
+          left: 100%;
+          transform: translate(-50%, -50%);
+          background: transparent;
+          padding: 2px;
+          z-index: 3;
+        }
+      `}</style>
+    </div>
+  );
+}

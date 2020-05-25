@@ -2,16 +2,20 @@ import { Serializable } from './helpers';
 import { fingers, guitarStrings } from './enums';
 
 export class Note extends Serializable {
-  static nullFret = '_';
+  static nullFret = '';
   static nullNoteRepresentation = '_';
 
   toFretString() {
     throw new Error('unimplemented');
   }
 
+  static makeNull() {
+    return new NullNote();
+  }
+
   static fromFretString(fretString, guitarString) {
     if (fretString === Note.nullFret) {
-      return new NullNote();
+      return Note.makeNull();
     }
 
     return new PlayedNote(parseInt(fretString), fingers.unspecified, guitarString);
@@ -19,7 +23,7 @@ export class Note extends Serializable {
 
   static fromString(string) {
     if (string === Note.nullNoteRepresentation) {
-      return new NullNote();
+      return Note.makeNull();
     }
 
     const parts = string.split(':');
@@ -34,7 +38,7 @@ export class Note extends Serializable {
         json.guitarString
       ].every(a => a === null)
     ) {
-      return new NullNote();
+      return Note.makeNull();
     }
 
     return PlayedNote.fromJson(json);

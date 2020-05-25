@@ -15,3 +15,5 @@ export const guitarStrings = Object.freeze({
   fifth: '5',
   sixth: '6',
 });
+
+export const numberOfStrings = Object.keys(guitarStrings).length;

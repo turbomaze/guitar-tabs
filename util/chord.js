@@ -1,18 +1,22 @@
 import { Serializable } from './helpers';
 import { Note } from './note';
-import { guitarStrings } from './enums';
-
-const numberOfStrings = Object.keys(guitarStrings).length;
+import { guitarStrings, numberOfStrings } from './enums';
 
 export class Chord extends Serializable {
   static nullChordRepresentation = '______';
+
+  getNoteAt(guitarString) {
+    throw new Error('unimplemented');
+  }
 
   static fromString(string) {
     if (string === Chord.nullChordRepresentation) {
       return new NullChord();
     }
 
-    const frets = string.split('');
+    const frets = string.split('').map(fretDisplayString => {
+      return fretDisplayString === '_' ? Note.nullFret : fretDisplayString;
+    });
     return new PlayedChord([
       // note: this may seem repetitive, but the association between the supplied frets and
       // the names of the guitar strings is not an essential property
@@ -36,6 +40,10 @@ export class Chord extends Serializable {
 }
 
 class NullChord extends Chord {
+  getNoteAt(guitarString) {
+    return Note.makeNull();
+  }
+
   toString() {
     return Chord.nullChordRepresentation;
   }
@@ -66,6 +74,14 @@ class PlayedChord extends Chord {
       [guitarStrings.second]: notes[4],
       [guitarStrings.first]: notes[5],
     };
+  }
+
+  getNoteAt(guitarString) {
+    if (!(guitarString in this.notes)) {
+      throw new Error(`Unexpected guitar string: "${guitarString}"`);
+    }
+
+    return this.notes[guitarString];
   }
 
   toString() {

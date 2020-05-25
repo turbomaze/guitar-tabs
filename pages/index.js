@@ -9,6 +9,8 @@ export default function Index() {
   return (
     <Container>
       <h1>tabs</h1>
+      <h2>untitled-01</h2>
+      <h3>2020-04-29</h3>
 
       <TabUi>
         {bars.map((bar, index) => {
@@ -36,7 +38,7 @@ const Container = ({ children }) => {
 
 const TabUi = ({ children }) => {
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+    <div style={{ display: 'flex', flexWrap: 'wrap', marginTop: '48px' }}>
       {children}
     </div>
   )

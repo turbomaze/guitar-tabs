@@ -21,5 +21,5 @@ export const numberOfStrings = Object.keys(guitarStrings).length;
 export const accents = Object.freeze({
   none: 'none',
   hammer: 'hammer',
-  pull: 'pull',
+  halfHammer: 'half-hammer',
 });

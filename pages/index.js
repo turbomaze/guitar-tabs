@@ -43,7 +43,7 @@ const TabUi = ({ children }) => {
 };
 
 const BarUi = ({ bar }) => {
-  const maxTicksPerLine = 16;
+  const maxTicksPerLine = 24;
   const maxBarsPerLine = Math.floor(maxTicksPerLine / bar.length);
   const percentPerBar = (100 / maxBarsPerLine).toFixed(2);
 
@@ -95,12 +95,15 @@ const GuitarString = ({ tick, guitarString }) => {
   const percentPerString = (100 / enums.numberOfStrings).toFixed(2);
   const note = tick.getNoteAt(guitarString);
   const label = note.toFretString();
+  const accent = note.getAccent();
+  const isAccent = [enums.accents.hammer, enums.accents.halfHammer].includes(accent);
+  const isHalf = accent ===enums.accents.halfHammer;
 
   return (
     <div className="guitar-string-container">
       <div className="guitar-string-line"></div>
       <NoteUi label={label} />
-      { note.getAccent() === enums.accents.hammer ? <Accent /> : null }
+      { isAccent ? <Accent half={isHalf} /> : null }
 
       <style jsx>{`
         .guitar-string-container {
@@ -145,21 +148,23 @@ const NoteUi = ({ label }) => {
   );
 };
 
-const Accent = ({ over, under }) => {
+const Accent = ({ half }) => {
   return (
     <div>
       <style jsx>{`
         div {
           position: absolute;
           border-top: 1px solid black;
-          width: 100%;
-          height: 66%;
           border-radius: 50%;
-          top: 10%;
-          left: 100%;
-          transform: translate(-50%, -50%);
           background: transparent;
           padding: 2px;
+
+          top: 10%;
+          left: -100%;
+          width: ${half ? '100%' : '200%'};
+          transform: translate(${half ? '50%' : '-25%'}, -50%);
+          height: 66%;
+
           z-index: 3;
         }
       `}</style>

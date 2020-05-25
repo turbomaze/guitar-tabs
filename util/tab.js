@@ -14,8 +14,20 @@ export class Tab extends Serializable {
     this.ticks = ticks;
   }
 
-  addChord(chord) {
-    this.ticks.push(chord);
+  tick(chord) {
+    this.addChords(chord);
+  }
+
+  doubleTick(chord) {
+    this.addChords(chord, Chord.rest());
+  }
+
+  quadTick(chord) {
+    this.addChords(chord, Chord.rest(), Chord.rest(), Chord.rest());
+  }
+
+  addChords(...chords) {
+    this.ticks.push(...chords);
   }
 
   asBars() {

@@ -62,6 +62,13 @@ const BarUi = ({ bar }) => {
 
           ${debug ? 'border: 1px solid blue;' : ''}
         }
+
+        @media only screen and (max-width: 600px) {
+          div {
+            width: 100%;
+            margin-bottom: 64px;
+          }
+        }
       `}</style>
     </div>
   );

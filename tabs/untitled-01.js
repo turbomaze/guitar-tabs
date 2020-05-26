@@ -27,7 +27,7 @@ function main() {
 }
 
 function phrase1(tab) {
-  tab.quadTick(Chord.fromString('3_____'));
+  tab.doubleTick(Chord.fromString('3_____'));
   tab.tick(Chord.fromString('___2__'));
   tab.tick(Chord.fromString('____32'));
   tab.doubleTick(slap());

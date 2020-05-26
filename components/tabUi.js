@@ -5,6 +5,11 @@ const debug = false;
 
 export const TabUi = ({ title, date, audioFile, tab }) => {
   const [tickIndex, setTickIndex] = useState(0);
+  const [tickAdvancer, setTickAdvancer] = useState(null);
+  const [audioStartTime, setAudioStartTime] = useState(0);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [audioVersion, setAudioVersion] = useState(Math.random());
+
   const bars = tab.asBars();
   const totalTicks = bars.length > 0 ? (bars.length * bars[0].length) : 0;
   const ticksPerMinute = 2 * tab.bpm;
@@ -12,33 +17,51 @@ export const TabUi = ({ title, date, audioFile, tab }) => {
   const computeDelayPerTickInMs = -0.8;
   const totalDelayPerTickMs = msPerTick - computeDelayPerTickInMs;
 
-  useEffect(() => {
+  const advanceTicks = () => {
     const integerDelay = Math.floor(totalDelayPerTickMs);
     const fractionalDelay = totalDelayPerTickMs - integerDelay;
     const roundUp = Math.random() < fractionalDelay;
     const extraDelay = roundUp ? 1 : 0;
     const totalIntegerDelay = integerDelay + extraDelay;
 
-    const interval = setInterval(() => {
-      setTickIndex(oldTickIndex => (oldTickIndex + 1) % totalTicks);
-    }, totalIntegerDelay);
+    return setInterval(() => {
+      setTickIndex(oldTickIndex => {
+        if ((oldTickIndex + 1) % totalTicks === 0) {
+          setAudioVersion(Math.random());
+          return 0;
+        }
 
-    return () => clearInterval(interval);
-  }, []);
+        return oldTickIndex + 1;
+      });
+    }, totalIntegerDelay);
+  };
+
+  let interval = null;
+  const play = () => {
+    setAudioStartTime(2.45);
+    setIsAudioPlaying(true);
+    setAudioVersion(Math.random());
+
+    setTimeout(() => {
+      setTickIndex(0);
+      setTickAdvancer(oldTickAdvancer => {
+        clearInterval(oldTickAdvancer);
+        return advanceTicks();
+      });
+    }, 100);
+  };
 
   return (
     <>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <div style={{ flex: 1 }}>
-          <h2>{title}</h2>
-          <h3>{date}</h3>
-        </div>
-
-        <audio controls style={{ flex: 2 }}>
-          <source src={audioFile} type="audio/wav" />
-          Your browser does not support the audio element.
-        </audio>
-      </div>
+      <TabHeader
+        title={title}
+        date={date}
+        play={play}
+        audioFile={audioFile}
+        audioStartTime={audioStartTime}
+        isAudioPlaying={isAudioPlaying}
+        version={audioVersion}
+      />
 
       <div style={{ display: 'flex', flexWrap: 'wrap', marginTop: '48px' }}>
         {bars.map((bar, barIndex) => {
@@ -58,7 +81,70 @@ export const TabUi = ({ title, date, audioFile, tab }) => {
   )
 };
 
-const BarUi = ({ bar, firstTickIndex, activeTickIndex }) => {
+const TabHeader = React.memo(({
+  title,
+  date,
+  play,
+  audioFile,
+  audioStartTime,
+  isAudioPlaying,
+  version,
+}) => {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{ flex: 1 }}>
+        <h2>{title}</h2>
+        <h3>{date}</h3>
+      </div>
+
+      <button onClick={play}>
+        Play
+        <style jsx>{`
+          cursor: pointer;
+          font-size: 18px;
+          background: white;
+          height: 48px;
+          outline: none;
+          border: 1px solid #888;
+          border-radius: 2px;
+          padding: 8px 32px;
+          transition: 0.2s;
+          :hover {
+            background: #eee;
+          }
+        `}</style>
+      </button>
+
+      <ReactAudio
+        audioFile={audioFile}
+        startTime={audioStartTime}
+        isPlaying={isAudioPlaying}
+        version={version}
+      />
+    </div>
+  );
+});
+
+const ReactAudio = React.memo(({ audioFile, startTime, isPlaying, version }) => {
+  const audio = React.createRef();
+
+  useEffect(() => {
+    audio.current.currentTime = startTime;
+
+    if (isPlaying) {
+      audio.current.play();
+    }
+  }, [startTime, isPlaying, version]);
+
+  return (
+    <audio style={{ flex: 2 }} ref={audio}>
+      <source src={audioFile} type="audio/wav" />
+      Your browser does not support the audio element.
+    </audio>
+  );
+});
+
+const BarUi = React.memo(({ bar, firstTickIndex, activeTickIndex }) => {
   const maxTicksPerLine = 24;
   const maxBarsPerLine = Math.floor(maxTicksPerLine / bar.length);
   const percentPerBar = (100 / maxBarsPerLine).toFixed(2);
@@ -98,9 +184,9 @@ const BarUi = ({ bar, firstTickIndex, activeTickIndex }) => {
       `}</style>
     </div>
   );
-};
+});
 
-const Tick = ({ tick, isActive, isOffBeat }) => {
+const Tick = React.memo(({ tick, isActive, isOffBeat }) => {
   const activeColor = isOffBeat ? 'rgb(255, 255, 200)' : 'yellow';
   const makeGuitarString = guitarString => {
     return (
@@ -137,9 +223,9 @@ const Tick = ({ tick, isActive, isOffBeat }) => {
       `}</style>
     </div>
   );
-};
+});
 
-const GuitarString = ({ tick, guitarString, isActive, activeColor }) => {
+const GuitarString = React.memo(({ tick, guitarString, isActive, activeColor }) => {
   const percentPerString = (100 / enums.numberOfStrings).toFixed(2);
   const note = tick.getNoteAt(guitarString);
   const label = note.toFretString();
@@ -170,9 +256,9 @@ const GuitarString = ({ tick, guitarString, isActive, activeColor }) => {
       `}</style>
     </div>
   );
-};
+});
 
-const NoteUi = ({ label, isActive, activeColor }) => {
+const NoteUi = React.memo(({ label, isActive, activeColor }) => {
   if (label === '') {
     return null;
   }
@@ -195,9 +281,9 @@ const NoteUi = ({ label, isActive, activeColor }) => {
       `}</style>
     </div>
   );
-};
+});
 
-const Accent = ({ half }) => {
+const Accent = React.memo(({ half }) => {
   return (
     <div>
       <style jsx>{`
@@ -219,4 +305,4 @@ const Accent = ({ half }) => {
       `}</style>
     </div>
   );
-}
+});

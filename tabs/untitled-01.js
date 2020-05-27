@@ -2,26 +2,30 @@ import { Tab, Chord, Note, enums } from '../util';
 
 function main() {
   const tab = Tab.fromBpm(120, 2 * 6);
-  phrase1(tab);
-  phrase2(tab);
-  phrase3(tab);
 
-  phrase1(tab);
-  phrase2(tab);
-  phrase4(tab);
+  const emptyMeasure = () => {
+    tab.quadTick(Chord.rest());
+    tab.quadTick(Chord.rest());
+    tab.quadTick(Chord.rest());
+  };
+  const group1 = () => {
+    phrase1(tab);
+    phrase2(tab);
+    phrase3(tab);
+  };
+  const group2 = () => {
+    phrase1(tab);
+    phrase2(tab);
+    phrase4(tab);
+  };
 
-  phrase1(tab);
-  phrase2(tab);
-  phrase3(tab);
-
-  // tab.tick(Chord.fromString('___P_W'));
-  // tab.tick(Chord.fromString('___R_O'));
-  // tab.tick(Chord.fromString('___O_R'));
-  // tab.tick(Chord.fromString('___G_K'));
-  // tab.tick(Chord.fromString('___R__'));
-  // tab.tick(Chord.fromString('___E_I'));
-  // tab.tick(Chord.fromString('___S_N'));
-  // tab.tick(Chord.fromString('___S__'));
+  emptyMeasure();
+  group1();
+  group2();
+  group1();
+  group2();
+  // phrase5(tab);
+  // phrase5(tab);
 
   return tab;
 }
@@ -92,6 +96,29 @@ function phrase4(tab) {
   tab.tick(Chord.fromString('___23_'));
   tab.tick(slap());
   tab.doubleTick(Chord.fromString('_0____'));
+}
+
+function phrase5(tab) {
+  tab.tick(Chord.fromString('3_____'));
+  tab.tick(Chord.fromString('___23_'));
+  tab.tick(Chord.fromString('██__ 2'));
+  tab.tick(Chord.fromString('____32'));
+  tab.tick(Chord.fromString('3_____'));
+  tab.tick(Chord.fromString('___2__'));
+  tab.tick(Chord.fromString('_____3'));
+  tab.tick(Chord.fromString('3____3'));
+  tab.doubleTick(Chord.fromString('_0_233'));
+  tab.tick(Chord.fromString('_____3'));
+  tab.tick(Chord.fromString('__0232'));
+  tab.tick(Chord.fromString('____3_'));
+  tab.tick(Chord.fromString('__0___'));
+  tab.tick(Chord.fromString('____32'));
+  tab.tick(Chord.fromString('██___2'));
+  tab.tick(Chord.fromString('__0___'));
+  tab.doubleTick(Chord.fromString('___232'));
+  tab.doubleTick(Chord.fromString('__0__2'));
+  tab.tick(Chord.fromString('_0_230'));
+  tab.doubleTick(Chord.fromString('____30'));
 }
 
 function slap() {

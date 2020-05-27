@@ -4,8 +4,7 @@ import { enums } from '../util';
 const debug = false;
 
 // experimentally determined magic numbers
-const computeDelayPerTickInMs = -0.8;
-const audioOffsetSeconds = 2.45; // TODO remove this; it's specific to 1 file
+const audioOffsetSeconds = 1.9; // TODO remove this; it's specific to 1 file
 
 export const TabUi = ({ title, date, audioFile, tab }) => {
   const [tickIndex, setTickIndex] = useState(0);
@@ -19,8 +18,8 @@ export const TabUi = ({ title, date, audioFile, tab }) => {
   const totalTicks = bars.length > 0 ? (bars.length * bars[0].length) : 0;
   const ticksPerMinute = 2 * tab.bpm;
   const msPerTick = 60000 / ticksPerMinute;
-  const msPerSample  = msPerTick / 2; // nyquist: double the sampling rate
-  const totalDelayPerTickMs = msPerSample - computeDelayPerTickInMs;
+  const msPerSample  = Math.min(100, msPerTick / 4); // nyquist: sample rate must be at least 2x freq
+  const totalDelayPerTickMs = msPerSample;
 
   const advanceTicks = () => {
     const integerDelay = Math.floor(totalDelayPerTickMs);
@@ -151,7 +150,7 @@ const ReactAudio = React.memo(({ audio, audioFile, startTime, isPlaying, version
 });
 
 const BarUi = React.memo(({ bar, firstTickIndex, activeTickIndex }) => {
-  const maxTicksPerLine = 24;
+  const maxTicksPerLine = 36;
   const maxBarsPerLine = Math.floor(maxTicksPerLine / bar.length);
   const percentPerBar = (100 / maxBarsPerLine).toFixed(2);
 
@@ -181,7 +180,7 @@ const BarUi = React.memo(({ bar, firstTickIndex, activeTickIndex }) => {
           ${debug ? 'border: 1px solid blue;' : ''}
         }
 
-        @media only screen and (max-width: 600px) {
+        @media only screen and (max-width: 920px) {
           div {
             width: 100%;
             margin-bottom: 64px;

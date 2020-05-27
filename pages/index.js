@@ -25,7 +25,7 @@ export default function Index() {
 
 const Container = ({ children }) => {
   return (
-    <div style={{ width: '880px', margin: '0 auto' }}>
+    <div style={{ width: '100%', maxWidth: '1800px', margin: '0 auto' }}>
       {children}
     </div>
   );

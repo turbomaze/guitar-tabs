@@ -1,22 +1,27 @@
 import { Tab, Chord, Note, enums } from '../util';
 
 function main() {
-  const tab = Tab.fromBpm(120, 12);
+  const tab = Tab.fromBpm(120, 2 * 6);
   phrase1(tab);
   phrase2(tab);
   phrase3(tab);
+
   phrase1(tab);
   phrase2(tab);
   phrase4(tab);
 
-  tab.tick(Chord.fromString('___P_W'));
-  tab.tick(Chord.fromString('3__R_O'));
-  tab.tick(Chord.fromString('___O_R'));
-  tab.tick(Chord.fromString('___G_K'));
-  tab.tick(Chord.fromString('___R__'));
-  tab.tick(Chord.fromString('___E_I'));
-  tab.tick(Chord.fromString('___S_N'));
-  tab.tick(Chord.fromString('___S__'));
+  phrase1(tab);
+  phrase2(tab);
+  phrase3(tab);
+
+  // tab.tick(Chord.fromString('___P_W'));
+  // tab.tick(Chord.fromString('___R_O'));
+  // tab.tick(Chord.fromString('___O_R'));
+  // tab.tick(Chord.fromString('___G_K'));
+  // tab.tick(Chord.fromString('___R__'));
+  // tab.tick(Chord.fromString('___E_I'));
+  // tab.tick(Chord.fromString('___S_N'));
+  // tab.tick(Chord.fromString('___S__'));
 
   return tab;
 }

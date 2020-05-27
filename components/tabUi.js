@@ -1,7 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { enums } from '../util';
 
 const debug = false;
+
+// experimentally determined magic numbers
+const computeDelayPerTickInMs = -0.8;
+const audioOffsetSeconds = 2.45; // TODO remove this; it's specific to 1 file
 
 export const TabUi = ({ title, date, audioFile, tab }) => {
   const [tickIndex, setTickIndex] = useState(0);
@@ -9,13 +13,14 @@ export const TabUi = ({ title, date, audioFile, tab }) => {
   const [audioStartTime, setAudioStartTime] = useState(0);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
   const [audioVersion, setAudioVersion] = useState(Math.random());
+  const audio = useRef(null);
 
   const bars = tab.asBars();
   const totalTicks = bars.length > 0 ? (bars.length * bars[0].length) : 0;
   const ticksPerMinute = 2 * tab.bpm;
   const msPerTick = 60000 / ticksPerMinute;
-  const computeDelayPerTickInMs = -0.8;
-  const totalDelayPerTickMs = msPerTick - computeDelayPerTickInMs;
+  const msPerSample  = msPerTick / 2; // nyquist: double the sampling rate
+  const totalDelayPerTickMs = msPerSample - computeDelayPerTickInMs;
 
   const advanceTicks = () => {
     const integerDelay = Math.floor(totalDelayPerTickMs);
@@ -25,20 +30,20 @@ export const TabUi = ({ title, date, audioFile, tab }) => {
     const totalIntegerDelay = integerDelay + extraDelay;
 
     return setInterval(() => {
-      setTickIndex(oldTickIndex => {
-        if ((oldTickIndex + 1) % totalTicks === 0) {
-          setAudioVersion(Math.random());
-          return 0;
-        }
-
-        return oldTickIndex + 1;
-      });
+      const currentTimeSeconds = audio && audio.current ? audio.current.currentTime : audioOffsetSeconds;
+      const currentTimeOffsetSeconds = currentTimeSeconds - audioOffsetSeconds;
+      const nextTick = Math.floor((1000 * currentTimeOffsetSeconds) / msPerTick);
+      if (nextTick > totalTicks) {
+        setAudioVersion(Math.random());
+        setTickIndex(0);
+      } else {
+        setTickIndex(nextTick);
+      }
     }, totalIntegerDelay);
   };
 
-  let interval = null;
   const play = () => {
-    setAudioStartTime(2.45);
+    setAudioStartTime(audioOffsetSeconds);
     setIsAudioPlaying(true);
     setAudioVersion(Math.random());
 
@@ -57,6 +62,7 @@ export const TabUi = ({ title, date, audioFile, tab }) => {
         title={title}
         date={date}
         play={play}
+        audio={audio}
         audioFile={audioFile}
         audioStartTime={audioStartTime}
         isAudioPlaying={isAudioPlaying}
@@ -85,6 +91,7 @@ const TabHeader = React.memo(({
   title,
   date,
   play,
+  audio,
   audioFile,
   audioStartTime,
   isAudioPlaying,
@@ -116,6 +123,7 @@ const TabHeader = React.memo(({
       </button>
 
       <ReactAudio
+        audio={audio}
         audioFile={audioFile}
         startTime={audioStartTime}
         isPlaying={isAudioPlaying}
@@ -125,9 +133,7 @@ const TabHeader = React.memo(({
   );
 });
 
-const ReactAudio = React.memo(({ audioFile, startTime, isPlaying, version }) => {
-  const audio = React.createRef();
-
+const ReactAudio = React.memo(({ audio, audioFile, startTime, isPlaying, version }) => {
   useEffect(() => {
     audio.current.currentTime = startTime;
 

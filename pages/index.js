@@ -9,7 +9,7 @@ export default function Index() {
       <TabUi 
         title={'untitled-01'}
         date={'2020-04-29'}
-        audioFile={"/untitled-01.wav"}
+        audioFile={"/untitled-01.mp3"}
         tab={untitled01}
       />
 

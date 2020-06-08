@@ -4,7 +4,7 @@ import { enums } from '../util';
 const debug = false;
 
 // experimentally determined magic numbers
-const audioOffsetSeconds = 2.05; // TODO remove this; it's specific to 1 file
+const audioOffsetSeconds = 5.1; // TODO remove this; it's specific to 1 file
 
 export const TabUi = ({ title, date, audioFile, tab }) => {
   const [tickIndex, setTickIndex] = useState(0);
@@ -16,7 +16,7 @@ export const TabUi = ({ title, date, audioFile, tab }) => {
 
   const bars = tab.asBars();
   const totalTicks = bars.length > 0 ? (bars.length * bars[0].length) : 0;
-  const ticksPerMinute = 2 * tab.bpm;
+  const ticksPerMinute = tab.ticksPerBeat * tab.bpm;
   const msPerTick = 60000 / ticksPerMinute;
   const msPerSample  = Math.min(100, msPerTick / 4); // nyquist: sample rate must be at least 2x freq
   const totalDelayPerTickMs = msPerSample;
@@ -135,6 +135,7 @@ const TabHeader = React.memo(({
 const ReactAudio = React.memo(({ audio, audioFile, startTime, isPlaying, version }) => {
   useEffect(() => {
     audio.current.currentTime = startTime;
+    audio.current.playbackRate = 1;
 
     if (isPlaying) {
       audio.current.play();
@@ -150,7 +151,7 @@ const ReactAudio = React.memo(({ audio, audioFile, startTime, isPlaying, version
 });
 
 const BarUi = React.memo(({ bar, firstTickIndex, activeTickIndex }) => {
-  const maxTicksPerLine = 36;
+  const maxTicksPerLine = 40;
   const maxBarsPerLine = Math.floor(maxTicksPerLine / bar.length);
   const percentPerBar = (100 / maxBarsPerLine).toFixed(2);
 
@@ -159,7 +160,7 @@ const BarUi = React.memo(({ bar, firstTickIndex, activeTickIndex }) => {
       {bar.map((tick, relativeTickIndex) => {
         const currentTickIndex = firstTickIndex + relativeTickIndex;
         const isActive = currentTickIndex === activeTickIndex;
-        const isOffBeat = currentTickIndex % 2 === 1;
+        const isOffBeat = currentTickIndex % 4 !== 0;
         return (
           <Tick
             key={relativeTickIndex}

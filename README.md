@@ -5,7 +5,7 @@ Open source library to render guitar tabs in React.
 
 Demo: https://tabs.anthony.ai/
 
-Demo (on Handshake!): http://www.tabs.js/
+Demo (on Handshake!): http://tabs.js/
 
 ## License
 

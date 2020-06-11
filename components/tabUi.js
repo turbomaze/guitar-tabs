@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { enums } from '../util';
 
-const debug = false;
+const debug = true;
+const debugCss = false;
 
 // experimentally determined magic numbers
-const audioOffsetSeconds = 5.1; // TODO remove this; it's specific to 1 file
+const audioOffsetSeconds = 25.0; // TODO remove this; it's specific to 1 file
 
 export const TabUi = ({ title, date, audioFile, tab }) => {
   const [tickIndex, setTickIndex] = useState(0);
@@ -178,7 +179,7 @@ const BarUi = React.memo(({ bar, firstTickIndex, activeTickIndex }) => {
           padding-right: 32px;
           margin-bottom: 32px;
 
-          ${debug ? 'border: 1px solid blue;' : ''}
+          ${debugCss ? 'border: 1px solid blue;' : ''}
         }
 
         @media only screen and (max-width: 920px) {
@@ -193,7 +194,11 @@ const BarUi = React.memo(({ bar, firstTickIndex, activeTickIndex }) => {
 });
 
 const Tick = React.memo(({ tick, isActive, isOffBeat }) => {
-  const activeColor = isOffBeat ? 'rgb(255, 255, 200)' : 'yellow';
+  let activeColor = isOffBeat ? 'rgb(255, 255, 200)' : 'yellow';
+  if (debug && !isOffBeat) {
+    activeColor = isActive ? activeColor : '#efefef';
+    isActive = true;
+  }
   const makeGuitarString = guitarString => {
     return (
       <GuitarString
@@ -218,9 +223,9 @@ const Tick = React.memo(({ tick, isActive, isOffBeat }) => {
         div {
           flex: 1;
           height: 200px;
-          background: ${isActive ? activeColor : 'transparent'};
+          background: ${(isActive) ? activeColor : 'transparent'};
 
-          ${debug ? 'border: 1px solid red;' : ''}
+          ${debugCss ? 'border: 1px solid red;' : ''}
         }
 
         div:last-child {
@@ -250,7 +255,7 @@ const GuitarString = React.memo(({ tick, guitarString, isActive, activeColor }) 
           height: ${percentPerString}%;
           position: relative;
 
-          ${debug ? 'border: 1px solid lightgreen;' : '' }
+          ${debugCss ? 'border: 1px solid lightgreen;' : '' }
         }
 
         .guitar-string-line {

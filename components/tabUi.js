@@ -88,7 +88,7 @@ const TabHeader = React.memo(({
 }) => {
   const isShowingBeatsLabel = isShowingBeats ? 'Hide beats' : 'Show beats';
   return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
+    <div className="tab-header">
       <div style={{ flex: 1 }}>
         <h2>{title}</h2>
         <h3>{date}</h3>
@@ -100,6 +100,20 @@ const TabHeader = React.memo(({
         audio={audio}
         audioFile={audioFile}
       />
+
+      <style jsx>{`
+        .tab-header {
+          display: flex;
+          align-items: center;
+          position: sticky;
+          top: 0;
+          background: white;
+          padding-top: 16px;
+          padding-bottom: 16px;
+          z-index: 4;
+          box-shadow: 0 6px 6px -6px rgba(0, 0, 0, 0.3);
+        }
+      `}</style>
     </div>
   );
 });
@@ -154,6 +168,7 @@ const BarUi = React.memo(({ bar, firstTickIndex, activeTickIndex, isShowingBeats
         return (
           <Tick
             key={relativeTickIndex}
+            relativeTickIndex={relativeTickIndex}
             isActive={isActive}
             isOffBeat={isOffBeat}
             isShowingBeats={isShowingBeats}
@@ -183,11 +198,11 @@ const BarUi = React.memo(({ bar, firstTickIndex, activeTickIndex, isShowingBeats
   );
 });
 
-const Tick = React.memo(({ tick, isActive, isOffBeat, isShowingBeats }) => {
+const Tick = React.memo(({ tick, relativeTickIndex, isActive, isOffBeat, isShowingBeats }) => {
   const tickRef = useRef(null);
 
   useEffect(() => {
-    if (isActive) {
+    if (relativeTickIndex === 0) {
       tickRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }, [isActive]);

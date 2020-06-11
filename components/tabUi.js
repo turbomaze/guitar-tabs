@@ -184,24 +184,34 @@ const BarUi = React.memo(({ bar, firstTickIndex, activeTickIndex, isShowingBeats
 });
 
 const Tick = React.memo(({ tick, isActive, isOffBeat, isShowingBeats }) => {
-  let activeColor = isOffBeat ? 'rgb(255, 255, 200)' : 'yellow';
-  if (isShowingBeats && !isOffBeat) {
-    activeColor = isActive ? activeColor : '#efefef';
-    isActive = true;
-  }
+  const tickRef = useRef(null);
+
+  useEffect(() => {
+    if (isActive) {
+      tickRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [isActive]);
+
   const makeGuitarString = guitarString => {
     return (
       <GuitarString
         tick={tick}
-        isActive={isActive}
+        isActive={renderAsActive}
         activeColor={activeColor}
         guitarString={guitarString}
       />
     );
   };
 
+  let renderAsActive = isActive;
+  let activeColor = isOffBeat ? 'rgb(255, 255, 200)' : 'yellow';
+  if (isShowingBeats && !isOffBeat) {
+    activeColor = isActive ? activeColor : '#efefef';
+    renderAsActive = true;
+  }
+
   return (
-    <div>
+    <div ref={tickRef}>
       {makeGuitarString(enums.guitarStrings.first)}
       {makeGuitarString(enums.guitarStrings.second)}
       {makeGuitarString(enums.guitarStrings.third)}
@@ -213,7 +223,7 @@ const Tick = React.memo(({ tick, isActive, isOffBeat, isShowingBeats }) => {
         div {
           flex: 1;
           height: 200px;
-          background: ${(isActive) ? activeColor : 'transparent'};
+          background: ${(renderAsActive) ? activeColor : 'transparent'};
 
           ${debugCss ? 'border: 1px solid red;' : ''}
         }

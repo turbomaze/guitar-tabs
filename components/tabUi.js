@@ -89,22 +89,24 @@ const TabHeader = React.memo(({
   const isShowingBeatsLabel = isShowingBeats ? 'Hide beats' : 'Show beats';
   return (
     <div className="tab-header">
-      <div style={{ flex: 1 }}>
-        <h2>{title}</h2>
-        <h3>{date}</h3>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div style={{ flex: 1 }}>
+          <h2>{title}</h2>
+          <h3>{date}</h3>
+        </div>
+
+        <Button label={isShowingBeatsLabel} onClick={toggleIsShowingBeats} />
       </div>
 
-      <Button label={isShowingBeatsLabel} onClick={toggleIsShowingBeats} />
-
-      <ReactAudio
-        audio={audio}
-        audioFile={audioFile}
-      />
+      <div style={{ display: 'flex' }}>
+        <ReactAudio
+          audio={audio}
+          audioFile={audioFile}
+        />
+      </div>
 
       <style jsx>{`
         .tab-header {
-          display: flex;
-          align-items: center;
           position: sticky;
           top: 0;
           background: white;
@@ -131,7 +133,6 @@ const Button = React.memo(({ label, onClick }) => {
         border: 1px solid #888;
         border-radius: 2px;
         padding: 8px 32px;
-        margin-right: 32px;
         transition: 0.2s;
         :hover {
           background: #eee;
@@ -147,7 +148,7 @@ const ReactAudio = React.memo(({ audio, audioFile }) => {
   }, []);
 
   return (
-    <audio style={{ flex: 2 }} ref={audio} controls loop>
+    <audio style={{ flex: 1 }} ref={audio} controls loop>
       <source src={audioFile} type="audio/wav" />
       Your browser does not support the audio element.
     </audio>

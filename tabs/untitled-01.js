@@ -1,7 +1,7 @@
 import { Tab, Chord, Note, enums } from '../util';
 
 function main() {
-  const tab = Tab.fromBpm(120, 5);
+  const tab = Tab.fromBpm(105, 5);
 
   const abacPattern = (f, g, h) => {
     f(tab);
@@ -10,11 +10,23 @@ function main() {
     h(tab);
   };
 
+  const emptyMeasure = () => {
+    tab.halfNote(Chord.rest());
+    tab.halfNote(Chord.rest());
+    tab.quarterNote(Chord.rest());
+  };
+
   abacPattern(measureA, measureB, measureC);
   abacPattern(measureA, measureB, measureC);
   abacPattern(measureD, measureE, measureF);
   abacPattern(measureG, measureH, measureH);
   abacPattern(measureI, measureE, measureF);
+
+  measureA(tab);
+  measureB(tab);
+
+  emptyMeasure();
+  emptyMeasure();
 
   return tab;
 }

@@ -7,7 +7,7 @@ export default function Index() {
       <h1>tabs</h1>
 
       <TabUi 
-        title={'untitled-01'}
+        title={'untitled-01 @ 105bpm'}
         date={'2020-04-29'}
         audioFile={"/untitled-01.mp3"}
         tab={untitled01}

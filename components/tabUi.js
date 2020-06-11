@@ -4,7 +4,7 @@ import { enums } from '../util';
 const debugCss = false;
 
 // experimentally determined magic numbers
-const audioOffsetSeconds = 5.1; // TODO remove this; it's specific to 1 file
+const audioOffsetSeconds = 2.65; // TODO remove this; it's specific to 1 file
 
 export const TabUi = ({ title, date, audioFile, tab }) => {
   const [tickIndex, setTickIndex] = useState(0);

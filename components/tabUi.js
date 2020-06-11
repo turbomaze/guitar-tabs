@@ -1,26 +1,25 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { enums } from '../util';
 
-const debug = true;
 const debugCss = false;
 
 // experimentally determined magic numbers
-const audioOffsetSeconds = 25.0; // TODO remove this; it's specific to 1 file
+const audioOffsetSeconds = 5.1; // TODO remove this; it's specific to 1 file
 
 export const TabUi = ({ title, date, audioFile, tab }) => {
   const [tickIndex, setTickIndex] = useState(0);
   const [tickAdvancer, setTickAdvancer] = useState(null);
-  const [audioStartTime, setAudioStartTime] = useState(0);
-  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
-  const [audioVersion, setAudioVersion] = useState(Math.random());
+  const [isShowingBeats, setIsShowingBeats] = useState(false);
   const audio = useRef(null);
 
-  const bars = tab.asBars();
-  const totalTicks = bars.length > 0 ? (bars.length * bars[0].length) : 0;
-  const ticksPerMinute = tab.ticksPerBeat * tab.bpm;
-  const msPerTick = 60000 / ticksPerMinute;
-  const msPerSample  = Math.min(100, msPerTick / 4); // nyquist: sample rate must be at least 2x freq
-  const totalDelayPerTickMs = msPerSample;
+  useEffect(() => {
+    setTimeout(() => {
+      setTickAdvancer(oldTickAdvancer => {
+        clearInterval(oldTickAdvancer);
+        return advanceTicks();
+      });
+    }, 100);
+  }, []);
 
   const advanceTicks = () => {
     const integerDelay = Math.floor(totalDelayPerTickMs);
@@ -34,7 +33,6 @@ export const TabUi = ({ title, date, audioFile, tab }) => {
       const currentTimeOffsetSeconds = currentTimeSeconds - audioOffsetSeconds;
       const nextTick = Math.floor((1000 * currentTimeOffsetSeconds) / msPerTick);
       if (nextTick > totalTicks) {
-        setAudioVersion(Math.random());
         setTickIndex(0);
       } else {
         setTickIndex(nextTick);
@@ -42,31 +40,23 @@ export const TabUi = ({ title, date, audioFile, tab }) => {
     }, totalIntegerDelay);
   };
 
-  const play = () => {
-    setAudioStartTime(audioOffsetSeconds);
-    setIsAudioPlaying(true);
-    setAudioVersion(Math.random());
 
-    setTimeout(() => {
-      setTickIndex(0);
-      setTickAdvancer(oldTickAdvancer => {
-        clearInterval(oldTickAdvancer);
-        return advanceTicks();
-      });
-    }, 100);
-  };
+  const bars = tab.asBars();
+  const totalTicks = bars.length > 0 ? (bars.length * bars[0].length) : 0;
+  const ticksPerMinute = tab.ticksPerBeat * tab.bpm;
+  const msPerTick = 60000 / ticksPerMinute;
+  const msPerSample  = Math.min(100, msPerTick / 4); // nyquist: sample rate must be at least 2x freq
+  const totalDelayPerTickMs = msPerSample;
 
   return (
     <>
       <TabHeader
         title={title}
         date={date}
-        play={play}
+        isShowingBeats={isShowingBeats}
+        toggleIsShowingBeats={() => setIsShowingBeats(oldValue => !oldValue)}
         audio={audio}
         audioFile={audioFile}
-        audioStartTime={audioStartTime}
-        isAudioPlaying={isAudioPlaying}
-        version={audioVersion}
       />
 
       <div style={{ display: 'flex', flexWrap: 'wrap', marginTop: '48px' }}>
@@ -78,6 +68,7 @@ export const TabUi = ({ title, date, audioFile, tab }) => {
               key={barIndex}
               firstTickIndex={firstTickIndex}
               activeTickIndex={tickIndex}
+              isShowingBeats={isShowingBeats}
               bar={bar}
             />
           );
@@ -90,13 +81,12 @@ export const TabUi = ({ title, date, audioFile, tab }) => {
 const TabHeader = React.memo(({
   title,
   date,
-  play,
+  isShowingBeats,
+  toggleIsShowingBeats,
   audio,
   audioFile,
-  audioStartTime,
-  isAudioPlaying,
-  version,
 }) => {
+  const isShowingBeatsLabel = isShowingBeats ? 'Hide beats' : 'Show beats';
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <div style={{ flex: 1 }}>
@@ -104,54 +94,53 @@ const TabHeader = React.memo(({
         <h3>{date}</h3>
       </div>
 
-      <button onClick={play}>
-        Play
-        <style jsx>{`
-          cursor: pointer;
-          font-size: 18px;
-          background: white;
-          height: 48px;
-          outline: none;
-          border: 1px solid #888;
-          border-radius: 2px;
-          padding: 8px 32px;
-          transition: 0.2s;
-          :hover {
-            background: #eee;
-          }
-        `}</style>
-      </button>
+      <Button label={isShowingBeatsLabel} onClick={toggleIsShowingBeats} />
 
       <ReactAudio
         audio={audio}
         audioFile={audioFile}
-        startTime={audioStartTime}
-        isPlaying={isAudioPlaying}
-        version={version}
       />
     </div>
   );
 });
 
-const ReactAudio = React.memo(({ audio, audioFile, startTime, isPlaying, version }) => {
-  useEffect(() => {
-    audio.current.currentTime = startTime;
-    audio.current.playbackRate = 1;
+const Button = React.memo(({ label, onClick }) => {
+  return (
+    <button onClick={onClick}>
+      {label}
+      <style jsx>{`
+        cursor: pointer;
+        font-size: 18px;
+        background: white;
+        height: 48px;
+        outline: none;
+        border: 1px solid #888;
+        border-radius: 2px;
+        padding: 8px 32px;
+        margin-right: 32px;
+        transition: 0.2s;
+        :hover {
+          background: #eee;
+        }
+      `}</style>
+    </button>
+  );
+});
 
-    if (isPlaying) {
-      audio.current.play();
-    }
-  }, [startTime, isPlaying, version]);
+const ReactAudio = React.memo(({ audio, audioFile }) => {
+  useEffect(() => {
+    audio.current.playbackRate = 1;
+  }, []);
 
   return (
-    <audio style={{ flex: 2 }} ref={audio}>
+    <audio style={{ flex: 2 }} ref={audio} controls loop>
       <source src={audioFile} type="audio/wav" />
       Your browser does not support the audio element.
     </audio>
   );
 });
 
-const BarUi = React.memo(({ bar, firstTickIndex, activeTickIndex }) => {
+const BarUi = React.memo(({ bar, firstTickIndex, activeTickIndex, isShowingBeats }) => {
   const maxTicksPerLine = 40;
   const maxBarsPerLine = Math.floor(maxTicksPerLine / bar.length);
   const percentPerBar = (100 / maxBarsPerLine).toFixed(2);
@@ -167,6 +156,7 @@ const BarUi = React.memo(({ bar, firstTickIndex, activeTickIndex }) => {
             key={relativeTickIndex}
             isActive={isActive}
             isOffBeat={isOffBeat}
+            isShowingBeats={isShowingBeats}
             tick={tick}
           />
         );
@@ -193,9 +183,9 @@ const BarUi = React.memo(({ bar, firstTickIndex, activeTickIndex }) => {
   );
 });
 
-const Tick = React.memo(({ tick, isActive, isOffBeat }) => {
+const Tick = React.memo(({ tick, isActive, isOffBeat, isShowingBeats }) => {
   let activeColor = isOffBeat ? 'rgb(255, 255, 200)' : 'yellow';
-  if (debug && !isOffBeat) {
+  if (isShowingBeats && !isOffBeat) {
     activeColor = isActive ? activeColor : '#efefef';
     isActive = true;
   }

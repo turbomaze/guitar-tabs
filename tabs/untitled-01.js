@@ -1,7 +1,7 @@
 import { Tab, Chord, Note, enums } from '../util';
 
 function main() {
-  const tab = Tab.fromBpm(120 - 0, 5);
+  const tab = Tab.fromBpm(120, 5);
 
   const abacPattern = (f, g, h) => {
     f(tab);

@@ -9,7 +9,6 @@ export default function Index() {
       <TabUi 
         title={'untitled-01 @ 105bpm'}
         date={'2020-04-29'}
-        audioFile={"/untitled-01.mp3"}
         tab={untitled01}
       />
 

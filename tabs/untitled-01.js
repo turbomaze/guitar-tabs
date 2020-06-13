@@ -1,7 +1,7 @@
 import { Tab, Chord, Note, enums } from '../util';
 
 function main() {
-  const tab = Tab.fromBpm(105, 5);
+  const tab = Tab.fromBpm(105, 5, "/untitled-01.mp3", 2.65);
 
   const abacPattern = (f, g, h) => {
     f(tab);

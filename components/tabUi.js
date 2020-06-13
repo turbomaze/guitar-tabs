@@ -3,10 +3,7 @@ import { enums } from '../util';
 
 const debugCss = false;
 
-// experimentally determined magic numbers
-const audioOffsetSeconds = 2.65; // TODO remove this; it's specific to 1 file
-
-export const TabUi = ({ title, date, audioFile, tab }) => {
+export const TabUi = ({ title, date, tab }) => {
   const [tickIndex, setTickIndex] = useState(0);
   const [tickAdvancer, setTickAdvancer] = useState(null);
   const [isShowingBeats, setIsShowingBeats] = useState(false);
@@ -29,8 +26,8 @@ export const TabUi = ({ title, date, audioFile, tab }) => {
     const totalIntegerDelay = integerDelay + extraDelay;
 
     return setInterval(() => {
-      const currentTimeSeconds = audio && audio.current ? audio.current.currentTime : audioOffsetSeconds;
-      const currentTimeOffsetSeconds = currentTimeSeconds - audioOffsetSeconds;
+      const currentTimeSeconds = audio && audio.current ? audio.current.currentTime : tab.audioOffsetSeconds;
+      const currentTimeOffsetSeconds = currentTimeSeconds - tab.audioOffsetSeconds;
       const nextTick = Math.floor((1000 * currentTimeOffsetSeconds) / msPerTick);
       if (nextTick > totalTicks) {
         setTickIndex(0);
@@ -56,7 +53,7 @@ export const TabUi = ({ title, date, audioFile, tab }) => {
         isShowingBeats={isShowingBeats}
         toggleIsShowingBeats={() => setIsShowingBeats(oldValue => !oldValue)}
         audio={audio}
-        audioFile={audioFile}
+        audioFile={tab.audioFile}
       />
 
       <div style={{ display: 'flex', flexWrap: 'wrap', marginTop: '48px' }}>

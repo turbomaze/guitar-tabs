@@ -5,13 +5,17 @@ export class Tab extends Serializable {
   /**
    * @param {number} bpm
    * @param {number} ticksPerBar
+   * @param {string} audioFile
+   * @param {number} audioOffsetSeconds
    * @param {Chord[]} ticks
    */
-  constructor(bpm, beatsPerBar, ticks) {
+  constructor(bpm, beatsPerBar, audioFile, audioOffsetSeconds, ticks) {
     super();
     this.ticksPerBeat = 4; // beat is a quarter note
     this.bpm = bpm;
     this.ticksPerBar = this.ticksPerBeat * beatsPerBar;
+    this.audioFile = audioFile;
+    this.audioOffsetSeconds = audioOffsetSeconds;
     this.ticks = ticks;
   }
 
@@ -66,8 +70,8 @@ export class Tab extends Serializable {
     };
   }
 
-  static fromBpm(bpm, beatsPerBar) {
-    return new Tab(bpm, beatsPerBar, []);
+  static fromBpm(bpm, beatsPerBar, audioFile, audioOffsetSeconds) {
+    return new Tab(bpm, beatsPerBar, audioFile, audioOffsetSeconds, []);
   }
 
   static fromJson(json) {

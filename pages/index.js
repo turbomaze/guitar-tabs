@@ -1,5 +1,6 @@
 import { TabUi } from '../components/tabUi';
 import { tab as untitled01 } from '../tabs/untitled-01';
+import { tab as untitled02 } from '../tabs/untitled-02';
 
 export default function Index() {
   return (
@@ -7,9 +8,9 @@ export default function Index() {
       <h1>tabs</h1>
 
       <TabUi 
-        title={'untitled-01 @ 105bpm'}
-        date={'2020-04-29'}
-        tab={untitled01}
+        title={'untitled-02'}
+        date={'2020-06-13'}
+        tab={untitled02}
       />
 
       <style jsx global>{`

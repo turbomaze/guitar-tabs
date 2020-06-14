@@ -48,7 +48,7 @@ export const TabUi = ({ title, date, tab }) => {
   return (
     <>
       <TabHeader
-        title={title}
+        title={`${title} @ ${tab.bpm}bpm`}
         date={date}
         isShowingBeats={isShowingBeats}
         toggleIsShowingBeats={() => setIsShowingBeats(oldValue => !oldValue)}
@@ -153,7 +153,7 @@ const ReactAudio = React.memo(({ audio, audioFile }) => {
 });
 
 const BarUi = React.memo(({ bar, firstTickIndex, activeTickIndex, isShowingBeats }) => {
-  const maxTicksPerLine = 40;
+  const maxTicksPerLine = 48;
   const maxBarsPerLine = Math.floor(maxTicksPerLine / bar.length);
   const percentPerBar = (100 / maxBarsPerLine).toFixed(2);
 

@@ -19,69 +19,69 @@ function main() {
   endWithC(measureD1, measureD2, measureB);
   endWithC(measureA, measureE, measureF);
 
-  emptyMeasure();
+  workInProgress(tab);
 
   return tab;
 }
 
 function measureA(tab) {
-  tab.sixteenths(2)(Chord.fromString('_7____'));
-  tab.sixteenths(2)(Chord.fromString('____0_'));
-  tab.sixteenths(2)(Chord.fromString('___0__'));
-  tab.sixteenths(2)(Chord.fromString('_7____'));
-  tab.sixteenths(2)(Chord.fromString('_____7'));
-  tab.sixteenths(2)(Chord.fromString('_7____'));
-  tab.sixteenths(2)(Chord.fromString('___0__'));
-  tab.sixteenths(2)(Chord.fromString('____0_'));
+  tab.eighthNote(Chord.fromString('_7____'));
+  tab.eighthNote(Chord.fromString('____0_'));
+  tab.eighthNote(Chord.fromString('___0__'));
+  tab.eighthNote(Chord.fromString('_7____'));
+  tab.eighthNote(Chord.fromString('_____7'));
+  tab.eighthNote(Chord.fromString('_7____'));
+  tab.eighthNote(Chord.fromString('___0__'));
+  tab.eighthNote(Chord.fromString('____0_'));
 }
 
 function measureB(tab) {
-  tab.sixteenths(2)(Chord.fromString('_5____'));
-  tab.sixteenths(2)(Chord.fromString('____0_'));
-  tab.sixteenths(2)(Chord.fromString('___0__'));
-  tab.sixteenths(2)(Chord.fromString('_5____'));
-  tab.sixteenths(2)(Chord.fromString('_____7'));
-  tab.sixteenths(2)(Chord.fromString('_5____'));
-  tab.sixteenths(2)(Chord.fromString('___0__'));
-  tab.sixteenths(2)(Chord.fromString('____0_'));
+  tab.eighthNote(Chord.fromString('_5____'));
+  tab.eighthNote(Chord.fromString('____0_'));
+  tab.eighthNote(Chord.fromString('___0__'));
+  tab.eighthNote(Chord.fromString('_5____'));
+  tab.eighthNote(Chord.fromString('_____7'));
+  tab.eighthNote(Chord.fromString('_5____'));
+  tab.eighthNote(Chord.fromString('___0__'));
+  tab.eighthNote(Chord.fromString('____0_'));
 }
 
 function measureC(tab) {
-  tab.sixteenths(2)(Chord.fromString('7_____'));
-  tab.sixteenths(2)(Chord.fromString('____7_'));
-  tab.sixteenths(2)(Chord.fromString('___0__'));
-  tab.sixteenths(2)(Chord.fromString('7_____'));
-  tab.sixteenths(2)(Chord.fromString('_____0'));
-  tab.sixteenths(2)(Chord.fromString('7_____'));
-  tab.sixteenths(2)(Chord.fromString('___0__'));
-  tab.sixteenths(2)(Chord.fromString('____7_'));
+  tab.eighthNote(Chord.fromString('7_____'));
+  tab.eighthNote(Chord.fromString('____7_'));
+  tab.eighthNote(Chord.fromString('___0__'));
+  tab.eighthNote(Chord.fromString('7_____'));
+  tab.eighthNote(Chord.fromString('_____0'));
+  tab.eighthNote(Chord.fromString('7_____'));
+  tab.eighthNote(Chord.fromString('___0__'));
+  tab.eighthNote(Chord.fromString('____7_'));
 }
 
 function measureD1(tab) {
-  tab.sixteenths(2)(Chord.fromString('_7____'));
-  tab.sixteenths(2)(Chord.fromString('____0_'));
-  tab.sixteenths(2)(Chord.fromString('___0__'));
-  tab.sixteenths(2)(Chord.fromString('0_____'));
-  tab.sixteenths(2)(Chord.fromString('_____7'));
-  tab.sixteenths(2)(Chord.fromString('_7____'));
-  tab.sixteenths(2)(Chord.fromString('___0__'));
-  tab.sixteenths(2)(Chord.fromString('____0_'));
+  tab.eighthNote(Chord.fromString('_7____'));
+  tab.eighthNote(Chord.fromString('____0_'));
+  tab.eighthNote(Chord.fromString('___0__'));
+  tab.eighthNote(Chord.fromString('0_____'));
+  tab.eighthNote(Chord.fromString('_____7'));
+  tab.eighthNote(Chord.fromString('_7____'));
+  tab.eighthNote(Chord.fromString('___0__'));
+  tab.eighthNote(Chord.fromString('____0_'));
 }
 
 function measureD2(tab) {
-  tab.sixteenths(2)(Chord.fromString('0_____'));
-  tab.sixteenths(2)(Chord.fromString('____0_'));
-  tab.sixteenths(2)(Chord.fromString('___0__'));
-  tab.sixteenths(2)(Chord.fromString('_7____'));
-  tab.sixteenths(2)(Chord.fromString('_____7'));
-  tab.sixteenths(2)(Chord.fromString('0_____'));
-  tab.sixteenths(2)(Chord.fromString('___0__'));
-  tab.sixteenths(2)(Chord.fromString('____0_'));
+  tab.eighthNote(Chord.fromString('0_____'));
+  tab.eighthNote(Chord.fromString('____0_'));
+  tab.eighthNote(Chord.fromString('___0__'));
+  tab.eighthNote(Chord.fromString('_7____'));
+  tab.eighthNote(Chord.fromString('_____7'));
+  tab.eighthNote(Chord.fromString('0_____'));
+  tab.eighthNote(Chord.fromString('___0__'));
+  tab.eighthNote(Chord.fromString('____0_'));
 }
 
 function measureE(tab) {
-  tab.sixteenths(2)(Chord.fromString('_7___8'));
-  tab.sixteenths(2)(
+  tab.eighthNote(Chord.fromString('_7___8'));
+  tab.eighthNote(
     Chord.fromJson(
       {
         notes: [
@@ -101,23 +101,34 @@ function measureE(tab) {
       }
     ),
   );
-  tab.sixteenths(2)(Chord.fromString('___0_8'));
-  tab.sixteenths(2)(Chord.fromString('0_____'));
-  tab.sixteenths(2)(Chord.fromString('_____7'));
-  tab.sixteenths(2)(Chord.fromString('_7____'));
-  tab.sixteenths(2)(Chord.fromString('___0__'));
-  tab.sixteenths(2)(Chord.fromString('____0_'));
+  tab.eighthNote(Chord.fromString('___0_8'));
+  tab.eighthNote(Chord.fromString('0_____'));
+  tab.eighthNote(Chord.fromString('_____7'));
+  tab.eighthNote(Chord.fromString('_7____'));
+  tab.eighthNote(Chord.fromString('___0__'));
+  tab.eighthNote(Chord.fromString('____0_'));
 }
 
 function measureF(tab) {
-  tab.sixteenths(2)(Chord.fromString('_5____'));
-  tab.sixteenths(2)(Chord.fromString('____0_'));
-  tab.sixteenths(2)(Chord.fromString('___0__'));
-  tab.sixteenths(2)(Chord.fromString('_5____'));
-  tab.sixteenths(2)(Chord.fromString('_____8'));
-  tab.sixteenths(2)(Chord.fromString('_5___7'));
-  tab.sixteenths(2)(Chord.fromString('___0__'));
-  tab.sixteenths(2)(Chord.fromString('____0_'));
+  tab.eighthNote(Chord.fromString('_5____'));
+  tab.eighthNote(Chord.fromString('____0_'));
+  tab.eighthNote(Chord.fromString('___0__'));
+  tab.eighthNote(Chord.fromString('_5____'));
+  tab.eighthNote(Chord.fromString('_____8'));
+  tab.eighthNote(Chord.fromString('_5___7'));
+  tab.eighthNote(Chord.fromString('___0__'));
+  tab.eighthNote(Chord.fromString('____0_'));
+}
+
+function workInProgress(tab) {
+  tab.eighthNote(Chord.fromString('_P____'));
+  tab.eighthNote(Chord.fromString('_R____'));
+  tab.eighthNote(Chord.fromString('_O___W'));
+  tab.eighthNote(Chord.fromString('_G_I_O'));
+  tab.eighthNote(Chord.fromString('_R_N_R'));
+  tab.eighthNote(Chord.fromString('_E___K'));
+  tab.eighthNote(Chord.fromString('_S____'));
+  tab.eighthNote(Chord.fromString('_S____'));
 }
 
 export const tab = main();

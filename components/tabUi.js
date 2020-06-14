@@ -16,7 +16,7 @@ export const TabUi = ({ title, date, tab }) => {
         return advanceTicks();
       });
     }, 100);
-  }, []);
+  }, [tab.audioOffsetSeconds]);
 
   const advanceTicks = () => {
     const integerDelay = Math.floor(totalDelayPerTickMs);
@@ -141,8 +141,10 @@ const Button = React.memo(({ label, onClick }) => {
 
 const ReactAudio = React.memo(({ audio, audioFile }) => {
   useEffect(() => {
+    audio.current.pause();
+    audio.current.load();
     audio.current.playbackRate = 1;
-  }, []);
+  }, [audioFile]);
 
   return (
     <audio style={{ flex: 1 }} ref={audio} controls loop>
